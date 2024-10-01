@@ -3,7 +3,7 @@
 require_relative "lib/internal_notifications/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "internal_notifications"
+  spec.name = "internal-notifications"
   spec.version = InternalNotifications::VERSION
   spec.authors = ["devs@buda.com"]
   spec.summary = "Internal Notifications Messenger"
@@ -14,6 +14,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activesupport", [">= 5.0", "< 8.0"]
+  spec.add_dependency "google-cloud-pubsub"
+  spec.add_dependency "power-types"
   spec.add_development_dependency "bundler", "~> 2.3.7"
   spec.add_development_dependency "guard-rspec", "~> 4.7"
   spec.add_development_dependency "pry"
