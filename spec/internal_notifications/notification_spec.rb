@@ -1,13 +1,16 @@
 require 'spec_helper'
 
-RSpec.describe InternalNotifications::Send do
+RSpec.describe InternalNotifications::Notification do
   let(:pubsub_client) { instance_double(InternalNotifications::PubsubClient) }
+  let(:project_id) { 'project-id' }
+  let(:topic_id) { 'messages-topic-id' }
+  let(:notification_service) do
+    described_class.new(topic_id: topic_id, project_id: project_id)
+  end
   let(:platform) { 'slack' }
   let(:message) { 'hello world!' }
   let(:type) { 'warning' }
   let(:to) { 'some-destination' }
-  let(:project_id) { 'project-id' }
-  let(:topic_id) { 'messages_topic_id' }
   let(:expected_message) do
     {
       platform: platform,
@@ -18,8 +21,12 @@ RSpec.describe InternalNotifications::Send do
   end
 
   def perform
-    described_class.for(platform: platform, message: message, type: type, to: to,
-                        project_id: project_id, topic_id: topic_id)
+    notification_service.send(
+      platform: platform,
+      message: message,
+      type: type,
+      to: to
+    )
   end
 
   before do
@@ -33,7 +40,7 @@ RSpec.describe InternalNotifications::Send do
     expect(pubsub_client).to have_received(:publish).with(expected_message)
   end
 
-  context 'when PubsubClient returns nil' do
+  context 'when pubsub client returns nil' do
     before do
       allow(pubsub_client).to receive(:publish).and_return(nil)
     end

@@ -1,13 +1,13 @@
 require 'power-types'
 
 module InternalNotifications
-  class Send < PowerTypes::Command.new(:platform, :message, :type, :to, :project_id, :topic_id)
-    def perform
+  class Notification < PowerTypes::Service.new(:topic_id, :project_id)
+    def send(platform:, message:, type:, to:)
       message = {
-        platform: @platform,
-        message: @message,
-        type: @type,
-        to: @to
+        platform: platform,
+        message: message,
+        type: type,
+        to: to
       }.to_json
 
       raise InternalNotifications::Error, 'Failed to send message' unless client.publish(message)
